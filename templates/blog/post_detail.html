@@ -1,0 +1,48 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }} | {{ block.super }}{% endblock %}
+
+{% block content %}
+{% include 'blog/alerts.html' %}
+
+
+  <h3>{{ post.title }}</h3>
+  <small>Post created by: {{ post.author }}</small>
+  <hr>
+  <p>{{ post.body }}</p>
+
+  <div class="row gallery">
+    {% for p in post.images_set.all %}
+    {% if p.image %}
+      <div class="col-md-3">
+        <img src="{{ p.image.url }}" alt="Image Not Found" class="img-thumbnail">
+      </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+<div id="like-section">
+  {% include 'blog/like_section.html' %}
+</div>
+{% if post.author == request.user %}
+
+<div class="section-1" style="float:right;">
+  <a href="{% url 'blog:post_edit' id=post.id %}">
+    <button type="button" class="btn btn-outline-success">Edit</button>
+  </a>
+  <a href="{% url 'blog:post_delete' id=post.id %}" id="delete">
+    <button type="button" class="btn btn-danger">Delete</button>
+  </a>
+</div>
+{% endif %}
+
+
+<br><br>
+<hr>
+
+
+
+<div class="main-comment-section">
+  {% include 'blog/comments.html' %}
+</div>
+{% endblock %}

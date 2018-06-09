@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}AV's blog{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+  </head>
+  <body>
+    {% include 'blog/navbar.html' %}
+    <div class="container-fluid">
+      {% block content %}
+      {% endblock %}
+      {% include 'blog/footer.html' %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(event){
+        $('#delete').click(function(){
+          return confirm("Are you sure to delete this post?");
+        });
+
+        $('.reply-btn').click(function() {
+          $(this).parent().parent().next('.replied-comments').fadeToggle()
+        });
+
+
+        $(function(){
+          setTimeout(function(){
+            $('.alert').slideUp(2000);
+          }, 5000);
+        });
+
+        $(document).on('click', '#like', function(event){
+          event.preventDefault();
+          var pk = $(this).attr('value');
+          $.ajax({
+            type: 'POST',
+            url: '{% url "like_post" %}',
+            data: {'id':pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: 'json',
+            success: function(response){
+              $('#like-section').html(response['form'])
+              console.log($('#like-section').html(response['form']));
+            },
+            error: function(rs, e){
+              console.log(rs.responseText);
+            },
+          });
+        });
+
+        $(document).on('submit', '.comment-form', function(event){
+          event.preventDefault();
+          console.log($(this).serialize());
+          $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(response) {
+              $('.main-comment-section').html(response['form']);
+              $('textarea').val('');
+              $('.reply-btn').click(function() {
+                $(this).parent().parent().next('.replied-comments').fadeToggle();
+                $('textarea').val('');
+              });
+            },
+            error: function(rs, e) {
+              console.log(rs.responseText);
+            },
+          });
+        });
+
+
+        $(document).on('submit', '.reply-form', function(event){
+          event.preventDefault();
+          console.log($(this).serialize());
+          $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(response) {
+              $('.main-comment-section').html(response['form']);
+              $('textarea').val('');
+              $('.reply-btn').click(function() {
+                $(this).parent().parent().next('.replied-comments').fadeToggle();
+                $('textarea').val('');
+              });
+            },
+            error: function(rs, e) {
+              console.log(rs.responseText);
+            },
+          });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      });
+    </script>
+  </body>
+</html>

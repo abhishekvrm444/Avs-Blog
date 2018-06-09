@@ -1,0 +1,45 @@
+<div class="container-fluid mt-2">
+  <div class="form-group row">
+    <form method="post" class="comment-form" action=".">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      {% if request.user.is_authenticated %}
+        <input type="submit" value="Submit" class="btn btn-outline-success">
+      {% else %}
+        <input type="submit" value="Submit" class="btn btn-outline-success" disabled>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+{{ comments.count }} Comment{{ comments|pluralize }}
+{% for comment in comments %}
+  <blockquote class="blockquote">
+    <p class="mb-0"><small>{{ comment.content }}</small></p>
+    <footer class="blockquote-footer"><small>by <cite title="Source Title">{{ comment.user|capfirst }}</cite></small>
+      <button type="button" name="button" class="reply-btn btn btn-outline-dark btn-sm ml-2">Reply</button>
+    </footer>
+  </blockquote>
+
+  <div class="replied-comments container mt-2" style="display:none;">
+    {% for reply in comment.replies.all %}
+    <blockquote class="blockquote">
+      <p class="mb-0"><small>{{ reply.content }}</small></p>
+      <footer class="blockquote-footer"><small>by <cite title="Source Title">{{ reply.user|capfirst }}</cite></small>
+    </footer>
+    </blockquote>
+    {% endfor %}
+    <div class="form-group row">
+      <form method="post" class="reply-form" action=".">
+        {% csrf_token %}
+        <input type="hidden" name="comment_id" value="{{ comment.id }}">
+        {{ comment_form.as_p }}
+        {% if request.user.is_authenticated %}
+          <input type="submit" value="Submit" class="btn btn-outline-success">
+        {% else %}
+          <input type="submit" value="Submit" class="btn btn-outline-success" disabled>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+{% endfor %}
