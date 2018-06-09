@@ -1,2 +1,2 @@
 # Avs-Blog
-My Django App
+My Django App 1
