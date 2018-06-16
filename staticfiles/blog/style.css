@@ -5,6 +5,7 @@ html {
 
 body {
   font-family: 'Lucida Casaul', 'Comic Sans MS';
+  margin-bottom: 160px;
 }
 
 .navbar-img {
@@ -24,4 +25,18 @@ body {
 .gallery .img-thumbnail {
   height: 250px;
   width: 300px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  padding: 15px;
+  background-color: #2C3E50;
+}
+
+.footer p {
+  text-align: justify;
 }
