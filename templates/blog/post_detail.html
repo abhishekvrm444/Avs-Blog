@@ -40,9 +40,10 @@
 <br><br>
 <hr>
 
+{% if not post.restrict_comment %}
+  <div class="main-comment-section">
+    {% include 'blog/comments.html' %}
+  </div>
+{% endif %}
 
-
-<div class="main-comment-section">
-  {% include 'blog/comments.html' %}
-</div>
 {% endblock %}
