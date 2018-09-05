@@ -23,15 +23,16 @@ class Post(models.Model):
         ('published','Published'),
     )
 
-    title       =       models.CharField(max_length=100)
-    slug        =       models.SlugField(max_length=120)
-    author      =       models.ForeignKey(User, related_name='blog_posts')
-    body        =       models.TextField()
-    likes       =       models.ManyToManyField(User, related_name='likes', blank=True)
-    created     =       models.DateTimeField(auto_now_add=True)
-    updated     =       models.DateTimeField(auto_now=True)
-    status      =       models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
-    restrict_comment =  models.BooleanField(default=False)
+    title               =       models.CharField(max_length=100)
+    slug                =       models.SlugField(max_length=120)
+    author              =       models.ForeignKey(User, related_name='blog_posts')
+    body                =       models.TextField()
+    likes               =       models.ManyToManyField(User, related_name='likes', blank=True)
+    created             =       models.DateTimeField(auto_now_add=True)
+    updated             =       models.DateTimeField(auto_now=True)
+    status              =       models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    restrict_comment    =       models.BooleanField(default=False)
+    favourite           =       models.ManyToManyField(User, related_name='favourite', blank=True)
 
 
 
@@ -40,7 +41,6 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-
 
     def total_likes(self):
         return self.likes.count()

@@ -25,5 +25,5 @@ def create_post(N):
 
 
 
-create_post(10)
+create_post(20)
 print("DATA IS POPULATED SUCCESSFULLY.")

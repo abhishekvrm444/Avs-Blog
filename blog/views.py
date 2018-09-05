@@ -57,12 +57,17 @@ def proper_pagination(posts, index):
         end_index = start_index + end_index
     return (start_index, end_index)
 
+
 def post_detail(request, id, slug):
     post = get_object_or_404(Post, id=id, slug=slug)
     comments = Comment.objects.filter(post=post, reply=None).order_by('-id')
     is_liked = False
+    is_favourite = False
     if post.likes.filter(id=request.user.id).exists():
         is_liked = True
+
+    if post.favourite.filter(id=request.user.id).exists():
+        is_favourite = True
 
     if request.method == 'POST':
         comment_form = CommentForm(request.POST or None)
@@ -81,6 +86,7 @@ def post_detail(request, id, slug):
     context = {
         'post': post,
         'is_liked': is_liked,
+        'is_favourite': is_favourite,
         'total_likes': post.total_likes(),
         'comments': comments,
         'comment_form': comment_form,
@@ -90,6 +96,22 @@ def post_detail(request, id, slug):
         return JsonResponse({'form': html})
 
     return render(request, 'blog/post_detail.html', context)
+
+def post_favourite_list(request):
+    user = request.user
+    favourite_posts = user.favourite.all()
+    context = {
+        'favourite_posts': favourite_posts,
+    }
+    return render(request, 'blog/post_favourite_list.html', context)
+
+def favourite_post(request, id):
+    post = get_object_or_404(Post, id=id)
+    if post.favourite.filter(id=request.user.id).exists():
+        post.favourite.remove(request.user)
+    else:
+        post.favourite.add(request.user)
+    return HttpResponseRedirect(post.get_absolute_url())
 
 
 def like_post(request):
@@ -188,12 +210,6 @@ def post_delete(request, id):
     post.delete()
     messages.warning(request, 'post has been successfully deleted!')
     return redirect('post_list')
-
-
-
-
-
-
 
 
 
