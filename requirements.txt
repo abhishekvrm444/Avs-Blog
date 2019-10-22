@@ -1,7 +1,7 @@
 Django==1.11.7
 Faker==0.8.10
 MySQL-python==1.2.5
-Pillow==5.0.0
+Pillow==6.2.0
 argparse==1.2.1
 certifi==2018.1.18
 chardet==3.0.4
