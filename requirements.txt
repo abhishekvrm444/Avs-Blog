@@ -16,5 +16,5 @@ six==1.11.0
 social-auth-app-django==2.1.0
 social-auth-core==1.7.0
 text-unidecode==1.1
-urllib3==1.22
+urllib3==1.26.5
 wsgiref==0.1.2
